@@ -1,0 +1,23 @@
+<%- include('partials/head', { title: 'Homepage' }) %> 
+<style>a {
+    all: unset;
+    cursor: pointer;
+}</style>
+</head>
+<body>
+<%- include('partials/navbar') %> 
+
+    <h1>Lists</h1>
+<hr>
+        <% for(let list of lists) { %> 
+            <a href="/list/<%= list.id %>" style="font-size: 20px; cursor: pointer;">
+                <h2><%= list.name %></h2>
+                <p><b>Posted by:</b> <%= list.username %> </p>
+                <p><b>Posted on:</b> <%= moment(list.datePosted).format("dddd, MMMM Do YYYY, h:mm a"); %> </p>
+                <img src="<%= list.image %> " alt="">
+                <h4><%= list.address %> </h4>
+               </a>
+            <hr>
+        <% } %> 
+
+<%- include('partials/foot') %> 

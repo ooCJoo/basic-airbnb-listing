@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand text-light" href="/">Home</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <% if (login){ %> 
+          <li class="nav-item">
+            <a class="nav-link text-light" href="/add">Add New List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="/mylist">My List</a>
+          </li>
+          <% } %> 
+        </ul>
+        <form class="d-flex" role="search">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <% if (!login){ %> 
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/register">Register</a>
+                  </li>
+            <li class="nav-item">
+                <a class="nav-link text-light" href="/login">Sign In</a>
+              </li>
+              <% } else {%> 
+               <li class="nav-item">
+                <p class="nav-link text-light"><%= user.username %></p>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" href="/logout">Sign Out</a>
+              </li>
+              <% } %> 
+            </ul>
+        </form>
+      </div>
+    </div>
+  </nav>

@@ -1,0 +1,82 @@
+<%- include('partials/head', { title: 'Show Details' }) %> 
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJc1t1jP6dAbtxtobiyd_xPDrLZTQvGBo&callback=initMap">
+</script>
+<style>
+.checked {
+  color: orange;
+}
+#map {
+  height: 30%;
+  width: 30%;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+a {
+    all: unset;
+    cursor: pointer;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<%- include('partials/navbar') %> 
+        <h1><%= list.name %></h1>
+        <p><b>Posted by:</b> <%= list.username %> </p>
+        <p><b>Posted on:</b> <%= moment(list.datePosted).format("dddd, MMMM Do YYYY, h:mm a");%> </p>      
+        <br>
+        <img src="<%= list.image %> " alt="">
+        <br>
+        <p style="font-size: 25px;"><b>Description:</b></p>
+        <pre style="white-space:pre-line;"><p style="font-size: 23px;"><%= list.description %> </p></pre>
+        <br>
+        <h4><%= list.address %> </h4>
+        <div id="map"></div>
+        <hr>
+        <h2>Reviews</h2>
+        <% if (login){ %> 
+        <a style="font-size: 25px; cursor: pointer;" href="/addreview/<%=list.id%>" class="btn border-dark"><b>Add Review</b></a>
+        <% } %> 
+        <hr>
+        
+        <% for(let review of reviews) { %> 
+                <h4><%= review.username %></h4>
+                <p><b>Posted on:</b> <%= moment(review.datePosted).format("dddd, MMMM Do YYYY, h:mm a"); %> </p>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star <%= review.rate >= 2 ? 'checked':''%>"></span>
+                <span class="fa fa-star <%= review.rate >= 3 ? 'checked':''%>"></span>
+                <span class="fa fa-star <%= review.rate >= 4 ? 'checked':''%>"></span>
+                <span class="fa fa-star <%= review.rate === 5 ? 'checked':''%>"></span>
+                <pre style="white-space:pre-line;"><p style="font-size: 18px;"><%= review.review %></p></pre>
+            <hr>
+
+        <% } %> 
+        
+        <script>
+            var lat1 = <%=list.lat%>;
+            var lng1 = <%=list.lng%>;
+            function initMap() {
+                // The location of Uluru
+                var uluru = {
+                  lat: lat1,
+                  lng: lng1
+                };
+                // The map, centered at Uluru
+                var map = new google.maps.Map(
+                  document.getElementById('map'), {
+                    zoom: 15,
+                    center: uluru
+                  });
+                // The marker, positioned at Uluru
+                var marker = new google.maps.Marker({
+                  position: uluru,
+                  map: map
+                });
+              }
+            </script>
+
+<%- include('partials/foot') %> 

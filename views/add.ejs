@@ -1,0 +1,107 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<%- include('partials/head', { title: 'Add List' }) %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+  <h1>Add new list listed to your account</h1>
+<form action="/listing" method="post">
+  <div>
+    <label for="name" style="font-size: 25px;"><b>Name of the place:</b></label>
+    <br>
+    <input type="text" name="name" id="name">
+  </div>
+  <br>
+  <div>
+    <label for="image" style="font-size: 25px;"><b>Add Image(can only accept link):</b></label>
+    <br>
+    <textarea name="image" id="image" cols="30" rows="10" style="font-size: 18px;"></textarea>
+    <br>
+    <img alt="Image added by link" id="img" src="" width="30%" height="auto">
+  </div>
+  <br>
+  <div>
+    <label for="description" style="font-size: 25px;"><b>Describe your place to guests:</b></label>
+    <br>
+    <textarea name="description" id="description" cols="30" rows="10" style="font-size: 18px;"></textarea>
+  </div>
+    <br>
+  </div>
+    <div>
+      <label for="adress" style="font-size: 25px;"><b>Adress (City, Province, Country, Postcode):</b></label>
+      <br>
+      <textarea name="address" id="address" cols="30" rows="10" style="font-size: 18px;">This is auto generate when you clicked on the map</textarea>
+    </div>
+
+      <input name="lat" id="lat" type="text" hidden>
+
+      <input name="lng" id="lng" type="text" hidden>
+
+      <input name="username" id="username" type="text" value="<%= user.username %>" hidden>
+   <br>
+      <span id="status" style="font-size: 19px;"><b>Click on the map to pin and add the address:</b></span>
+    <div id="map" style="width:50%;height:400px;"></div>
+    <br>
+    <button style="font-size: 25px;" class="btn border-dark">Create</button>
+  </form>
+
+<script>
+
+document.getElementById("image").addEventListener("input", myImgFunction);
+function myImgFunction() {
+  $('#img').attr('src', "");
+  var x = document.getElementById("image").value;
+  $('#img').attr('src', x);
+}
+
+    var marker;
+    var infowindow;
+    const myAPIKey = "000c50dba66b4065999c45da35f52b2f";
+    function myMap() {
+        var mapCanvas = document.getElementById("map");
+        var myCenter=new google.maps.LatLng(14.594767055162398,120.9844775695562);
+        var mapOptions = {
+            center: myCenter, zoom: 18,
+            mapTypeId:google.maps.MapTypeId.HYBRID
+        };
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+        google.maps.event.addListener(map, 'click', function(event) {
+            placeMarker(map, event.latLng);
+        });
+    }
+
+    function placeMarker(map, location) {
+        if (!marker || !marker.setPosition) {
+            marker = new google.maps.Marker({
+                position: location,
+                map: map,
+            });
+        } else {
+            marker.setPosition(location);
+        }
+        if (!!infowindow && !!infowindow.close) {
+            infowindow.close();
+        }
+        infowindow = new google.maps.InfoWindow({
+
+            content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
+        });
+
+        $('#lat').val(location.lat());
+        $('#lng').val(location.lng());
+        const reverseGeocodingUrl = `https://api.geoapify.com/v1/geocode/reverse?lat=${location.lat()}&lon=${location.lng()}&apiKey=${myAPIKey}`;
+        fetch(reverseGeocodingUrl).then(result => result.json())
+        .then(featureCollection => {
+          if (featureCollection.features.length === 0) {
+            document.getElementById("status").textContent = "The address is not found";
+            return;
+          }
+          const foundAddress = featureCollection.features[0];
+          // $('#addres').val(foundAddress.properties.formatted);
+          $('#address').val(`${foundAddress.properties.city}, ${foundAddress.properties.state}, ${foundAddress.properties.country}${foundAddress.properties.postcode === undefined ? "" : ", "+foundAddress.properties.postcode}`);
+          infowindow.open(map,marker);
+        });
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJc1t1jP6dAbtxtobiyd_xPDrLZTQvGBo&callback=myMap"></script>
+<%- include('partials/foot') %>

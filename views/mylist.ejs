@@ -1,0 +1,40 @@
+<%- include('partials/head', { title: 'My List' }) %> 
+<style>
+.checked {
+  color: orange;
+}
+a {
+    all: unset;
+    cursor: pointer;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<%- include('partials/navbar') %> 
+
+    <h1>My List</h1>
+<hr>
+        <% for(let list of lists) { %> 
+          <h1><%= list.name %></h1>
+          <p><b>Posted on:</b> <%= moment(list.datePosted).format("dddd, MMMM Do YYYY, h:mm a");%> </p>
+          <p style="font-size: 25px;"><b>Description:</b></p>
+          <pre style="white-space:pre-line;"><p style="font-size: 23px;"><%= list.description %> </p></pre>
+          <img src="<%= list.image %> " alt="">
+          <h4><%= list.address %> </h4>
+          <br>
+          <!-- edit -->
+          <a href="/updatelist/<%= list.id %>" style="font-size: 25px;" class="btn border-dark">Edit List</a>
+          <!-- delete -->
+          <br>
+         
+          <form action="/deletelist/<%= list._id %>?_method=DELETE" method="post">
+            <button style="font-size: 25px;" class="btn border-dark">Delete</button>
+          </form>
+          
+          <hr>
+        <% } %> 
+
+
+<%- include('partials/foot') %> 
+

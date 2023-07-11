@@ -1,0 +1,23 @@
+<%- include('partials/head', { title: 'Log In' }) %> 
+</head>
+<body>
+<%- include('partials/navbar') %> 
+<h1>Login</h1>
+<br>
+<form method="post" action="/login">
+  <div>
+    <label for="username" style="font-size: 25px;">Username:</label>
+    <input type="text" name="username" id="username" style="font-size: 18px;">
+  </div>
+  <br>
+  <div>
+    <label for="password" style="font-size: 25px;">Password:</label>
+    <input type="password" name="password" id="password" style="font-size: 18px;">
+  </div>
+  <br>
+  <div>
+    <input type="submit" value="Login" style="font-size: 25px;" class="btn border-dark">
+  </div>
+</form>
+
+<%- include('partials/foot') %> 
